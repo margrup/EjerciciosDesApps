@@ -21,8 +21,8 @@ class MainActivity : ComponentActivity() {
         setContent {
             EjerciciosTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Presentacion(
-                        modifier = Modifier.padding(innerPadding)
+                    FichaDelEstudiante(
+                        modifier = Modifier.padding(paddingValues = innerPadding)
                     )
                 }
             }
@@ -44,5 +44,42 @@ fun Presentacion(modifier: Modifier = Modifier) {
 fun PresentacionPreview() {
     EjerciciosTheme {
         Presentacion()
+    }
+}
+
+// Función Kotlin no composable
+fun descripcionEdad(edad: Int): String {
+    val condicion = if (edad >= 18) "mayor de edad" else "menor de edad"
+    return "Edad: $edad años ($condicion)"
+}
+
+// Composable reutilizable
+@Composable
+fun DatoEstudiante(etiqueta: String, valor: String, modifier: Modifier = Modifier) {
+    Text(
+        text = "$etiqueta: $valor",
+        modifier = modifier
+    )
+}
+
+@Composable
+fun FichaDelEstudiante(modifier: Modifier = Modifier) {
+    val edad = 20
+
+    Column(modifier = modifier) {
+        DatoEstudiante("Nombre", "Ana")
+        DatoEstudiante("Carrera", "Sistemas")
+        DatoEstudiante("Año", "1")
+        
+        // Uso de la función no composable descripcionEdad() en un Text
+        Text(text = descripcionEdad(edad))
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun FichaDelEstudiantePreview() {
+    EjerciciosTheme {
+        FichaDelEstudiante()
     }
 }
