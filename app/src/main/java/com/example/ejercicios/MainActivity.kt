@@ -18,6 +18,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
@@ -31,9 +36,11 @@ class MainActivity : ComponentActivity() {
         setContent {
             EjerciciosTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    FichaDelEstudiante(
-                        modifier = Modifier.padding(paddingValues = innerPadding)
-                    )
+                    Column(modifier = Modifier.padding(innerPadding)) {
+                        FichaDelEstudiante()
+                        Spacer(modifier = Modifier.height(16.dp))
+                        Contador()
+                    }
                 }
             }
         }
@@ -105,5 +112,54 @@ fun FichaDelEstudiante(modifier: Modifier = Modifier) {
 fun FichaDelEstudiantePreview() {
     EjerciciosTheme {
         FichaDelEstudiante()
+    }
+}
+
+@Composable
+fun Contador(modifier: Modifier = Modifier) {
+    // Estado observable que Compose "escucha"
+    var contador by remember { mutableIntStateOf(0) }
+
+    Column(
+        modifier = modifier.padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(
+            text = "Valor: $contador",
+            style = MaterialTheme.typography.headlineMedium
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            // Botón +1
+            Button(onClick = { contador++ }) {
+                Text("+1")
+            }
+
+            // Botón -1 (Con condición para no bajar de 0)
+            Button(onClick = { 
+                if (contador > 0) {
+                    contador-- 
+                }
+            }) {
+                Text("-1")
+            }
+
+            // Botón Reiniciar
+            Button(onClick = { contador = 0 }) {
+                Text("Reiniciar")
+            }
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ContadorPreview() {
+    EjerciciosTheme {
+        Contador()
     }
 }
