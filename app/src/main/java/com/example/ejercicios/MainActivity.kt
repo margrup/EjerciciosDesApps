@@ -40,13 +40,13 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-// Función Kotlin no composable
+// Función Kotlin no composable (Una función normal de Kotlin ejecuta código para hacer cálculos o procesar datos.)
 fun descripcionEdad(edad: Int): String {
     val condicion = if (edad >= 18) "mayor de edad" else "menor de edad"
     return "Edad: $edad años ($condicion)"
 }
 
-// Composable reutilizable
+// Composable reutilizable (Una función @Composable le dice a Android qué mostrar en la pantalla (un texto, un botón, una lista, etc.).)
 @Composable
 fun DatoEstudiante(etiqueta: String, valor: String, modifier: Modifier = Modifier) {
     Text(
