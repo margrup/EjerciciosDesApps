@@ -21,6 +21,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -32,11 +33,7 @@ import com.example.ejercicios.ui.theme.EjerciciosTheme
 @Composable
 fun ExperimentoPersistencia(modifier: Modifier = Modifier) {
     var nombre by remember { mutableStateOf("") }
-    var contador by remember { mutableIntStateOf(0) }
-
-    // Opcional
-    var nuevaTarea by remember { mutableStateOf("") }
-    var listaTareas by remember { mutableStateOf(listOf<String>()) }
+    var contador by rememberSaveable { mutableIntStateOf(0) }
 
     LazyColumn(
         modifier = modifier
@@ -44,6 +41,13 @@ fun ExperimentoPersistencia(modifier: Modifier = Modifier) {
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
+        item {
+            Text(
+                text = "Ejercicio 2",
+                style = MaterialTheme.typography.headlineMedium,
+                fontWeight = FontWeight.Bold
+            )
+        }
 
         item {
             Card(
@@ -56,7 +60,7 @@ fun ExperimentoPersistencia(modifier: Modifier = Modifier) {
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     Text(
-                        text = "1. Nombre y Contador",
+                        text = "Nombre (usando remember)",
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.SemiBold
                     )
@@ -64,22 +68,30 @@ fun ExperimentoPersistencia(modifier: Modifier = Modifier) {
                     OutlinedTextField(
                         value = nombre,
                         onValueChange = { nombre = it },
-                        label = { Text("Escribe un nombre") },
                         modifier = Modifier.fillMaxWidth(),
                         singleLine = true
                     )
 
+                    if (nombre.isNotBlank()) {
+                        Text(
+                            text = "Hola, $nombre!",
+                            style = MaterialTheme.typography.bodyLarge,
+                            fontWeight = FontWeight.Medium
+                        )
+                    }
+
                     HorizontalDivider()
 
                     Text(
-                        text = "Contador: $contador",
-                        style = MaterialTheme.typography.headlineSmall
+                        text = "Contador (usando rememberSaveable)",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.SemiBold
                     )
 
-                    // Botones +1 y Reiniciar
                     Row(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
                         Button(onClick = { contador++ }) {
                             Text("+1")
@@ -96,75 +108,7 @@ fun ExperimentoPersistencia(modifier: Modifier = Modifier) {
             }
         }
 
-        // Opcional
-        item {
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-            ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    Text(
-                        text = "2. Opcional",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.SemiBold
-                    )
 
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        OutlinedTextField(
-                            value = nuevaTarea,
-                            onValueChange = { nuevaTarea = it },
-                            label = { Text("Nueva tarea") },
-                            modifier = Modifier.weight(1f),
-                            singleLine = true
-                        )
-
-                        Button(
-                            onClick = {
-                                if (nuevaTarea.isNotBlank()) {
-                                    listaTareas += nuevaTarea
-                                    nuevaTarea = ""
-                                }
-                            }
-                        ) {
-                            Text("Agregar")
-                        }
-                    }
-
-                    if (listaTareas.isNotEmpty()) {
-                        Text(
-                            text = "Tareas en memoria (${listaTareas.size}):",
-                            style = MaterialTheme.typography.labelLarge
-                        )
-                    }
-                }
-            }
-        }
-
-        // Mostrar elementos de la lista de tareas
-        items(listaTareas) { tarea ->
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 16.dp, end = 16.dp),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceVariant
-                )
-            ) {
-                Text(
-                    text = "• $tarea",
-                    modifier = Modifier.padding(12.dp),
-                    style = MaterialTheme.typography.bodyMedium
-                )
-            }
-        }
     }
 }
 
